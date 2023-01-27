@@ -35,7 +35,7 @@
 
 <script>
 import PocketBase from "pocketbase";
-import signupForm from "~~/components/signup-form.vue";
+import signupForm from "~/components/signup-form.vue";
 
 export default {
   components: { signupForm },

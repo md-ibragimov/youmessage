@@ -14,5 +14,6 @@ export default {};
   background: none;
   font-size: 1.3em;
   cursor: pointer;
+  overflow: hidden;
 }
 </style>

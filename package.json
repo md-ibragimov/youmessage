@@ -17,6 +17,7 @@
     "@pinia/nuxt": "^0.4.6",
     "pinia": "^2.0.29",
     "pocketbase": "^0.10.0",
-    "sass": "^1.57.1"
+    "sass": "^1.57.1",
+    "vue-spinner": "^1.0.4"
   }
 }

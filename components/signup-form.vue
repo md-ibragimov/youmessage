@@ -13,7 +13,7 @@
           :class="$style.input"
           v-model="newUser.username"
           type="text"
-          placeholder="username"
+          placeholder="Username"
         />
       </div>
       <div v-if="count === 2" :class="$style.wrapper">
@@ -35,7 +35,7 @@
           :class="$style.input"
           v-model="newUser.password"
           type="password"
-          placeholder="Password"
+          placeholder="Password (from 8 characters)"
         />
         <input
           :class="$style.input"
@@ -46,28 +46,38 @@
       </div>
       <div v-if="count === 4" :class="$style.wrapper">
         <h3>Upload your avatar</h3>
-        <label :class="$style['avatar-load']">
-          <input @change="handleAvatar" type="file" />
+        <label
+          :style="
+            url && {
+              background: `url(${url}) no-repeat no-repeat center`,
+              backgroundSize: 'cover',
+            }
+          "
+          :class="$style['avatar-load']"
+        >
+          <input
+            @change="handleAvatar"
+            type="file"
+            accept="image/png, image/jpeg"
+          />
         </label>
       </div>
       <div :class="$style['nav-wrapper']">
-        <custom-button
-          :class="$style.navigate"
-          @click="count--"
-          v-if="count > 1"
-        >
+        <button-vue :class="$style.navigate" @click="count--" v-if="count > 1">
           Back
-        </custom-button>
-        <custom-button
-          v-if="count < 4"
-          :class="$style.navigate"
-          @click="count++"
-        >
+        </button-vue>
+        <button-vue v-if="count < 4" :class="$style.navigate" @click="count++">
           Next
-        </custom-button>
-        <custom-button type="submit" v-if="count === 4" :class="$style.navigate"
-          >SignUp</custom-button
+        </button-vue>
+        <button-vue
+          :disabled="isValid"
+          type="submit"
+          v-if="count === 4 && !isLoading"
+          :class="$style.navigate"
         >
+          signUp
+        </button-vue>
+        <GridLoader v-else-if="isLoading" />
       </div>
     </form>
   </div>
@@ -75,11 +85,15 @@
 
 <script>
 import PocketBase from "pocketbase";
-import customButton from "./custom-button.vue";
+import ButtonVue from "./ButtonVue.vue";
+import GridLoader from "vue-spinner/src/ClipLoader.vue";
 export default {
-  components: { customButton },
+  components: { ButtonVue, GridLoader },
   data() {
     return {
+      url: "",
+      isValid: true,
+      isLoading: false,
       count: 1,
       newUser: {
         email: null,
@@ -92,10 +106,52 @@ export default {
       },
     };
   },
+  watch: {
+    newUser: {
+      handler(value) {
+        if (
+          value.email &&
+          value.username &&
+          value.firstName &&
+          value.lastName &&
+          value.password &&
+          value.passwordConfirm &&
+          value.avatar
+        ) {
+          if (
+            value.email.trim().length &&
+            value.username.trim().length &&
+            value.firstName.trim().length &&
+            value.lastName.trim().length &&
+            value.password.trim().length &&
+            value.passwordConfirm.trim().length
+          ) {
+            this.isValid = false;
+          }
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
+    clearState() {
+      this.url = "";
+      this.isValid = true;
+      this.isLoading = false;
+      this.count = 1;
+      this.newUser = {
+        email: null,
+        username: null,
+        firstName: null,
+        lastName: null,
+        password: null,
+        passwordConfirm: null,
+        avatar: null,
+      };
+    },
     submit() {
-      console.log("work");
       const pb = new PocketBase("https://test-database.pockethost.io");
+      this.isLoading = true;
       const formData = new FormData();
       for (let i in this.newUser) {
         formData.append(i, this.newUser[i]);
@@ -106,23 +162,21 @@ export default {
           pb.collection("users")
             .authWithPassword(this.newUser.email, this.newUser.password)
             .then(() => {
-              this.newUser = {
-                email: null,
-                username: null,
-                firstName: null,
-                lastName: null,
-                password: null,
-                passwordConfirm: null,
-                avatar: null,
-              };
+              this.clearState();
               navigateTo(`users/${pb.authStore.model.id}`);
             });
         })
         .catch((error) => {
           alert(error);
+          this.clearState();
         });
     },
     handleAvatar(event) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(event.target.files[0]);
+      fileReader.onload = (eventLoad) => {
+        this.url = eventLoad.target.result;
+      };
       this.newUser.avatar = event.target.files[0];
     },
   },
@@ -160,8 +214,8 @@ export default {
       row-gap: 0.5em;
     }
     .avatar-load {
-      width: 5em;
-      height: 5em;
+      width: 8em;
+      height: 8em;
       border-radius: 50%;
       display: block;
       margin: 0 auto;
@@ -178,6 +232,9 @@ export default {
       column-gap: 0.5em;
       .navigate {
         margin-left: auto;
+        &:disabled {
+          cursor: default;
+        }
       }
     }
   }
