@@ -77,7 +77,7 @@
         >
           signUp
         </button-vue>
-        <GridLoader v-else-if="isLoading" />
+        <ClipLoader v-else-if="isLoading" />
       </div>
     </form>
   </div>
@@ -86,9 +86,9 @@
 <script>
 import PocketBase from "pocketbase";
 import ButtonVue from "./ButtonVue.vue";
-import GridLoader from "vue-spinner/src/ClipLoader.vue";
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
 export default {
-  components: { ButtonVue, GridLoader },
+  components: { ButtonVue, ClipLoader },
   data() {
     return {
       url: "",
@@ -128,6 +128,8 @@ export default {
           ) {
             this.isValid = false;
           }
+        } else {
+          this.isValid = true;
         }
       },
       deep: true,

@@ -1,27 +1,17 @@
 <template>
-  <div class="container">
-    <h1>Войдите</h1>
-    <form @submit.prevent="handleLogin" class="form">
-      <input
-        v-model="loginForm.loginOrEmail"
-        type="text"
-        placeholder="Login | Email"
-      />
-      <input
-        v-model="loginForm.password"
-        type="password"
-        placeholder="Password"
-      />
-      <input type="submit" />
-    </form>
+  <div :class="$style.container">
+    <sign-in-form />
+
   </div>
 </template>
 
 <script>
 import PocketBase from "pocketbase";
+import SignInForm from "~/components/signin-form.vue";
 import { useUserInfo } from "~/store/user";
 
 export default {
+  components: { SignInForm },
   mounted() {
     this.$nextTick(() => {
       const pb = new PocketBase(useRuntimeConfig().public.DATABASE_URL);
@@ -53,18 +43,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style module lang="scss">
 .container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  .form {
-    width: 500px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
+  justify-content: center;
 }
 </style>

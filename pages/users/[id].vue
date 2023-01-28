@@ -6,8 +6,10 @@
 
 <script>
 import PocketBase from "pocketbase";
+import { toggle } from "~/mixins/userRedirect";
 
 export default {
+  mixins: [toggle],
   data() {
     return {
       userInfo: null,
