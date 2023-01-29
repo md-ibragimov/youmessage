@@ -1,14 +1,12 @@
 <template>
   <div :class="$style.container">
     <sign-in-form />
-
   </div>
 </template>
 
 <script>
 import PocketBase from "pocketbase";
 import SignInForm from "~/components/signin-form.vue";
-import { useUserInfo } from "~/store/user";
 
 export default {
   components: { SignInForm },
@@ -19,26 +17,6 @@ export default {
         navigateTo(`users/${pb.authStore.model.id}`);
       }
     });
-  },
-  data() {
-    return {
-      loginForm: {
-        loginOrEmail: null,
-        password: null,
-      },
-      user: useUserInfo(),
-    };
-  },
-  methods: {
-    handleLogin() {
-      const pb = new PocketBase(useRuntimeConfig().public.DATABASE_URL);
-      pb.collection("users")
-        .authWithPassword(this.loginForm.loginOrEmail, this.loginForm.password)
-        .then(() => {
-          this.user.handleAuth(true);
-          navigateTo("/");
-        });
-    },
   },
 };
 </script>

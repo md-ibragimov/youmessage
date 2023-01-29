@@ -17,9 +17,11 @@ html {
   /* 2 */
   font-family: 'Ubuntu', sans-serif;
 }
+
 input[type="file"] {
   display: none;
 }
+
 /* Sections
    ========================================================================== */
 
@@ -407,3 +409,24 @@ h6,
 p {
   margin: 0;
 }
+
+a {
+  color: teal;
+}
+
+a:visited {
+  color: teal;
+}
+
+li {
+  list-style-type: none;
+  /* Убираем маркеры */
+}
+
+ul {
+  margin-left: 0;
+  /* Отступ слева в браузере IE и Opera */
+  padding-left: 0;
+  /* Отступ слева в браузере Firefox, Safari, Chrome */
+}
+

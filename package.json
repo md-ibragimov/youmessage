@@ -18,6 +18,7 @@
     "pinia": "^2.0.29",
     "pocketbase": "^0.10.0",
     "sass": "^1.57.1",
-    "vue-spinner": "^1.0.4"
+    "vue-spinner": "^1.0.4",
+    "vuejs-paginate-next": "^1.0.2"
   }
 }

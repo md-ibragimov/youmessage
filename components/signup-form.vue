@@ -63,6 +63,9 @@
         </label>
       </div>
       <div :class="$style['nav-wrapper']">
+        <NuxtLink v-if="count === 1" to="/signin"
+          >Have an account? Sign In!</NuxtLink
+        >
         <button-vue :class="$style.navigate" @click="count--" v-if="count > 1">
           Back
         </button-vue>
@@ -87,10 +90,13 @@
 import PocketBase from "pocketbase";
 import ButtonVue from "./ButtonVue.vue";
 import ClipLoader from "vue-spinner/src/ClipLoader.vue";
+import { useUserInfo } from "~/store/user";
+
 export default {
   components: { ButtonVue, ClipLoader },
   data() {
     return {
+      store: useUserInfo(),
       url: "",
       isValid: true,
       isLoading: false,
@@ -163,13 +169,14 @@ export default {
         .then((response) => {
           pb.collection("users")
             .authWithPassword(this.newUser.email, this.newUser.password)
-            .then(() => {
+            .then((response) => {
+              this.store.setUser(response.record);
               this.clearState();
               navigateTo(`users/${pb.authStore.model.id}`);
             });
         })
         .catch((error) => {
-          alert(error);
+          alert(JSON.stringify(error.data.data));
           this.clearState();
         });
     },

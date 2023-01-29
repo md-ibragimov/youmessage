@@ -6,6 +6,7 @@
         <input
           v-model="form.emailOrLogin"
           :class="$style.input"
+          autocapitalize="off"
           placeholder="Username or Email"
         />
         <input
@@ -15,6 +16,7 @@
           placeholder="Password"
         />
         <div :class="$style['nav-wrapper']">
+          <NuxtLink to="/signup">Don't have an account? Sign Up!</NuxtLink>
           <button-vue
             :disabled="isValid"
             :class="$style.navigate"
@@ -33,11 +35,13 @@
 <script>
 import PocketBase from "pocketbase";
 import ClipLoader from "vue-spinner/src/ClipLoader.vue";
+import { useUserInfo } from "~/store/user";
 
 export default {
   components: { ClipLoader },
   data() {
     return {
+      store: useUserInfo(),
       isLoading: false,
       isValid: true,
       form: {
@@ -60,7 +64,12 @@ export default {
       pb.collection("users")
         .authWithPassword(this.form.emailOrLogin, this.form.password)
         .then((response) => {
+          this.store.setUser(response.record);
           navigateTo(`users/${response.record.id}`);
+          this.clearState();
+        })
+        .catch((error) => {
+          alert("Data is incorrect");
           this.clearState();
         });
     },
@@ -114,6 +123,7 @@ export default {
         height: 2em;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin: 1em 0 0 auto;
         column-gap: 0.5em;
         .navigate {
@@ -124,6 +134,9 @@ export default {
         }
       }
     }
+  }
+  @media (max-width: 500px) {
+    width: 100%;
   }
 }
 </style>
