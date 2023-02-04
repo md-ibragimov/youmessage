@@ -4,7 +4,7 @@
     <div v-else :class="$style.content">
       <user-item :data="item" :key="item.id" v-for="item in users" />
     </div>
-    <custom-paginate :getUsers="getUsers"  :pageCount="pageCount" />
+    <custom-paginate :getUsers="getUsers" :pageCount="pageCount" />
   </div>
 </template>
 
@@ -40,7 +40,6 @@ export default {
           this.isLoading = false;
           this.pageCount = response.totalPages;
           this.users = response.items;
-          console.log(response);
         });
     },
   },
@@ -49,15 +48,22 @@ export default {
 
 <style module lang="scss">
 .container {
-  width: 100%;
+  width: 750px;
   height: calc(100% - 3em);
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 2em 0;
+  @media (max-width: 750px) {
+    width: 100%;
+  }
   .content {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 }
 </style>
