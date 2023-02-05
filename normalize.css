@@ -393,6 +393,24 @@ html {
   font-size: 16px;
 }
 
+@media (max-width: 1000px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 750px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 500px) {
+  html {
+    font-size: 13px;
+  }
+}
+
 html,
 body,
 #__nuxt {
@@ -429,4 +447,3 @@ ul {
   padding-left: 0;
   /* Отступ слева в браузере Firefox, Safari, Chrome */
 }
-

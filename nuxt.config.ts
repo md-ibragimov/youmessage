@@ -1,4 +1,9 @@
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: 'YouMessage'
+    }
+  },
   components: {
     dirs: [
       '~/components',

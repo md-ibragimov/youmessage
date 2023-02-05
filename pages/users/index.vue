@@ -56,7 +56,7 @@ export default {
   justify-content: space-between;
   padding: 2em 0;
   @media (max-width: 750px) {
-    width: 100%;
+    width: 98%;
   }
   .content {
     width: 100%;
