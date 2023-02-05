@@ -31,7 +31,6 @@ export default {
       const url = `${useRuntimeConfig().public.DATABASE_URL}/api/files/users/${
         this.data.id
       }/${this.data.avatar}?thumb=80x80`;
-      console.log(this.data);
       this.avatarUrl = url;
     });
   },

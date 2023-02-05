@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.6",
+    "moment": "^2.29.4",
     "pinia": "^2.0.29",
     "pocketbase": "^0.10.0",
     "sass": "^1.57.1",

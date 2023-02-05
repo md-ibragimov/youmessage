@@ -18,29 +18,60 @@
       </div>
       <div :class="$style.background" />
     </div>
-    <div v-if="user.bio && user.bio.length" :class="$style.bio">
+    <div
+      title="user bio"
+      v-if="user.bio && user.bio.length"
+      :class="$style.bio"
+    >
       <div :class="$style['bio-icon']"></div>
       <span>{{ user.bio }}</span>
+    </div>
+
+    <new-post
+      :posts="user.posts"
+      v-if="authUser.id === this.$route.params.id"
+      @pushPost="pushPost"
+    />
+    <div v-if="posts.length" :class="$style['posts-wrapper']">
+      <h2>Posts:</h2>
+      <post-item :data="post" :key="post.id" v-for="post in posts" />
     </div>
   </div>
 </template>
 
 <script>
 import PocketBase from "pocketbase";
+import PostItem from "~/components/PostItem.vue";
+import NewPost from "~/components/NewPost.vue";
+import moment from "moment";
 import { toggle } from "~/mixins/userRedirect";
 
 export default {
   mixins: [toggle],
+  components: { PostItem, NewPost },
+  watch: {
+    posts: {
+      handler() {
+        this.posts = this.posts.sort((a, b) => {
+          return moment(b.updated).diff(a.updated);
+        });
+      },
+      deep: true,
+    },
+  },
   data() {
     return {
+      authUser: null,
       user: null,
       avatarUrl: "",
+      posts: [],
     };
   },
   mounted() {
     this.$nextTick(() => {
       useHead({ title: "Loading..." });
       const pb = new PocketBase(useRuntimeConfig().public.DATABASE_URL);
+      this.authUser = pb.authStore.model;
       pb.collection("users")
         .getOne(this.$route.params.id)
         .then((response) => {
@@ -49,10 +80,22 @@ export default {
           this.avatarUrl = `${
             useRuntimeConfig().public.DATABASE_URL
           }/api/files/users/${response.id}/${response.avatar}?thumb=100x100`;
+          response.posts.forEach((element) => {
+            pb.collection("allposts")
+              .getOne(element)
+              .then((resp) => {
+                this.posts.push(resp);
+              });
+          });
         });
     });
   },
-  methods: {},
+  methods: {
+    pushPost(value) {
+      this.posts.push(value);
+      console.log(value, this.posts)
+    },
+  },
 };
 </script>
 
@@ -129,6 +172,13 @@ export default {
       background: url("~/assets/info.svg") no-repeat no-repeat center;
       background-size: contain;
     }
+  }
+  .posts-wrapper {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
   }
 }
 </style>
