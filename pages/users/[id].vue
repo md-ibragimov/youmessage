@@ -93,7 +93,7 @@ export default {
   methods: {
     pushPost(value) {
       this.posts.push(value);
-      console.log(value, this.posts)
+      console.log(value, this.posts);
     },
   },
 };

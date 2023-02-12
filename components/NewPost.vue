@@ -50,6 +50,7 @@ export default {
           },
         })
         .then((response) => {
+          console.log(response)
           pb.collection("users")
             .getOne(pb.authStore.model.id)
             .then((userInfo) => {
