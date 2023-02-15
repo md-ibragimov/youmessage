@@ -1,16 +1,23 @@
 <template>
   <div :class="$style.post">
-    <button :class="$style.delete"></button>
+    <button v-if="isLoading && postsId.includes(data.id)">Delete</button>
+    <button @click="deletePost" :class="$style.delete"></button>
     {{ data.post_content.body }}
   </div>
 </template>
 
 <script>
 export default {
-  props: ["data"],
+  props: ["data", "postsId"],
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
   methods: {
-    postDelete() {
-      console.log(this.data);
+    deletePost() {
+      this.isLoading = true;
+      this.$emit("deletePost", this.data.id, this.data.author);
     },
   },
 };

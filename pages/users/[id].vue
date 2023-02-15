@@ -34,7 +34,13 @@
     />
     <div v-if="posts.length" :class="$style['posts-wrapper']">
       <h2>Posts:</h2>
-      <post-item :data="post" :key="post.id" v-for="post in posts" />
+      <post-item
+        @deletePost="deletePost"
+        :data="post"
+        :postsId="postsId"
+        :key="post.id"
+        v-for="post in posts"
+      />
     </div>
   </div>
 </template>
@@ -65,6 +71,7 @@ export default {
       user: null,
       avatarUrl: "",
       posts: [],
+      postsId: [],
     };
   },
   mounted() {
@@ -75,6 +82,7 @@ export default {
       pb.collection("users")
         .getOne(this.$route.params.id)
         .then((response) => {
+          this.postsId = response.posts;
           useHead({ title: `${response.firstName} ${response.lastName}` });
           this.user = response;
           this.avatarUrl = `${
@@ -93,7 +101,23 @@ export default {
   methods: {
     pushPost(value) {
       this.posts.push(value);
-      console.log(value, this.posts);
+    },
+    deletePost(id, recordId) {
+      const pb = new PocketBase(useRuntimeConfig().public.DATABASE_URL);
+      const newPosts = this.posts.filter((el) => {
+        if (el.id !== id) return el;
+      });
+      const newPostsId = this.postsId.filter((el) => {
+        if (el !== id) return el;
+      });
+      pb.collection("users")
+        .update(recordId, {
+          posts: newPostsId,
+        })
+        .then(() => {
+          this.posts = newPosts;
+          this.postsId = newPostsId;
+        });
     },
   },
 };
