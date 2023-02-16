@@ -4,6 +4,7 @@
       v-model="input"
       rows="5"
       :class="$style.input"
+      :disabled="loading"
       placeholder="Что нового ?"
     />
     <button

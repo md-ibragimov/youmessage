@@ -37,7 +37,6 @@
       <post-item
         @deletePost="deletePost"
         :data="post"
-        :postsId="postsId"
         :key="post.id"
         v-for="post in posts"
       />
@@ -101,6 +100,7 @@ export default {
   methods: {
     pushPost(value) {
       this.posts.push(value);
+      this.postsId.push(value.id)
     },
     deletePost(id, recordId) {
       const pb = new PocketBase(useRuntimeConfig().public.DATABASE_URL);

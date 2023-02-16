@@ -1,17 +1,32 @@
 <template>
   <div :class="$style.post">
-    <button v-if="isLoading && postsId.includes(data.id)">Delete</button>
-    <button @click="deletePost" :class="$style.delete"></button>
+    <ClipLoader v-if="isLoading" :class="$style.loader" />
+    <button
+      v-else-if="!isLoading && authUser && $route.params.id === authUser.id"
+      @click="deletePost"
+      :class="$style.delete"
+    ></button>
     {{ data.post_content.body }}
   </div>
 </template>
 
 <script>
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
+import PocketBase from "pocketbase";
+
 export default {
-  props: ["data", "postsId"],
+  props: ["data"],
+  components: { ClipLoader },
+  mounted() {
+    this.$nextTick(() => {
+      const pb = new PocketBase(useRuntimeConfig().public.DATABASE_URL);
+      this.authUser = pb.authStore.model;
+    });
+  },
   data() {
     return {
       isLoading: false,
+      authUser: null,
     };
   },
   methods: {
@@ -42,6 +57,11 @@ export default {
     background: url("~/assets/delete.svg") no-repeat no-repeat center;
     background-size: contain;
     cursor: pointer;
+  }
+  .loader {
+    position: absolute;
+    top: 0.25em;
+    right: 0.5em;
   }
 }
 </style>
