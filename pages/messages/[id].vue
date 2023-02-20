@@ -13,6 +13,17 @@
           <img :src="avatarUrl" alt="user avatar" :class="$style.avatar" />
         </NuxtLink>
       </div>
+      <div :class="$style['message-content']"></div>
+      <div :class="$style['input-wrapper']">
+        <form :class="$style['send-message-form']">
+          <input
+            placeholder="write a message"
+            type="text"
+            :class="$style['message-area']"
+          />
+          <button type="submit" :class="$style.send">Send</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -62,7 +73,9 @@ export default {
     height: 100%;
     border: 2px solid teal;
     border-radius: 1em;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .header {
       width: 100%;
       height: 3em;
@@ -111,6 +124,40 @@ export default {
           width: auto;
           height: 100%;
           border-radius: 50%;
+        }
+      }
+    }
+    .message-content {
+      width: 100%;
+      height: calc(100% - 6em);
+      overflow-y: auto;
+    }
+    .input-wrapper {
+      width: 100%;
+      height: 3em;
+      border-top: 2px solid teal;
+      .send-message-form {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        column-gap: 1em;
+        padding: 0.25em 1em;
+        justify-content: space-between;
+        .message-area {
+          width: 100%;
+          outline: none;
+          border: 2px solid teal;
+          padding: 0 0.25em;
+          font-size: 1.2em;
+          font-weight: 600;
+        }
+        .send {
+          background-color: #fff;
+          border: 2px solid teal;
+          cursor: pointer;
+          &:hover {
+            background-color: azure;
+          }
         }
       }
     }

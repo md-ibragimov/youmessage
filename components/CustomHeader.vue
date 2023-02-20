@@ -5,6 +5,11 @@
     </NuxtLink>
     <nav :class="$style.navigation">
       <NuxtLink title="All users" to="/users" :class="$style.users"></NuxtLink>
+      <NuxtLink
+        title="messages"
+        to="/messages"
+        :class="$style.messages"
+      ></NuxtLink>
       <input type="text" placeholder="Search users" :class="$style.search" />
     </nav>
   </header>
@@ -48,9 +53,19 @@ export default {};
     .users {
       width: 2em;
       height: 2em;
-      background: url('~/assets/users.svg') no-repeat no-repeat center;
+      background: url("~/assets/users.svg") no-repeat no-repeat center;
       background-size: 80%;
-      transition: .25s;
+      transition: 0.25s;
+      &:hover {
+        background-color: rgb(175, 175, 175);
+      }
+    }
+    .messages {
+      width: 2em;
+      height: 2em;
+      background: url("~/assets/message.svg") no-repeat no-repeat center;
+      background-size: 90%;
+      transition: 0.25s;
       &:hover {
         background-color: rgb(175, 175, 175);
       }
