@@ -23,6 +23,12 @@ export default {
       this.authUser = pb.authStore.model;
     });
   },
+  unmounted() {
+    this.$nextTick(() => {
+      this.isLoading = false;
+      this.authUser = null;
+    });
+  },
   data() {
     return {
       isLoading: false,

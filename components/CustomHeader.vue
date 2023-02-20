@@ -3,7 +3,10 @@
     <NuxtLink :class="$style['logo-wrapper']" to="/">
       <div :class="$style.logo"></div>
     </NuxtLink>
-    <input type="text" placeholder="Search users" :class="$style.search" />
+    <nav :class="$style.navigation">
+      <NuxtLink title="All users" to="/users" :class="$style.users"></NuxtLink>
+      <input type="text" placeholder="Search users" :class="$style.search" />
+    </nav>
   </header>
 </template>
 
@@ -36,22 +39,39 @@ export default {};
       background-size: contain;
     }
   }
-  .search {
-    width: 130px;
-    border: none;
-    border-radius: 1em;
-    padding: .5em;
-    outline: none;
-    transition: .2s;
-    &:focus {
-      width: 300px;
-      border: 2px solid teal;
-      &::placeholder {
-        color: rgba($color: #000000, $alpha: 0);
+  .navigation {
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    column-gap: 1em;
+    .users {
+      width: 2em;
+      height: 2em;
+      background: url('~/assets/users.svg') no-repeat no-repeat center;
+      background-size: 80%;
+      transition: .25s;
+      &:hover {
+        background-color: rgb(175, 175, 175);
       }
     }
-    &::placeholder {
-      text-align: center;
+    .search {
+      width: 130px;
+      border: none;
+      border-radius: 1em;
+      padding: 0.5em;
+      outline: none;
+      transition: 0.2s;
+      &:focus {
+        width: 300px;
+        border: 2px solid teal;
+        &::placeholder {
+          color: rgba($color: #000000, $alpha: 0);
+        }
+      }
+      &::placeholder {
+        text-align: center;
+      }
     }
   }
 }

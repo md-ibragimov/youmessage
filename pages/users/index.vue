@@ -25,6 +25,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      useHead({title: "YouMessage"})
       this.getUsers(1);
     });
   },
@@ -33,7 +34,7 @@ export default {
       const pb = new PocketBase(useRuntimeConfig().public.DATABASE_URL);
       this.isLoading = true;
       pb.collection("users")
-        .getList(1, 2, {
+        .getList(1, 15, {
           page: num,
         })
         .then((response) => {

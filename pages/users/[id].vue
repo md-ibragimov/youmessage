@@ -13,8 +13,7 @@
         ></div>
       </div>
       <div :class="$style['navigate-button']">
-        <button>Send message</button>
-        <button>Add to friends</button>
+        <button v-if="authUser.id !== $route.params.id" >Send message</button>
       </div>
       <div :class="$style.background" />
     </div>
@@ -29,7 +28,7 @@
 
     <new-post
       :posts="user.posts"
-      v-if="authUser.id === this.$route.params.id"
+      v-if="authUser.id === $route.params.id"
       @pushPost="pushPost"
     />
     <div v-if="posts.length" :class="$style['posts-wrapper']">
