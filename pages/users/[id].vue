@@ -13,7 +13,7 @@
         ></div>
       </div>
       <div :class="$style['navigate-button']">
-        <button v-if="authUser.id !== $route.params.id" >Send message</button>
+        <NuxtLink :to="`/messages/${user.id}`" v-if="authUser.id !== $route.params.id" >Send message</NuxtLink>
       </div>
       <div :class="$style.background" />
     </div>

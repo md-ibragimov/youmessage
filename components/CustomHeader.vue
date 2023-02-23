@@ -10,13 +10,24 @@
         to="/messages"
         :class="$style.messages"
       ></NuxtLink>
+      <button title="Sign out" @click="signOut" :class="$style.signout"></button>
       <input type="text" placeholder="Search users" :class="$style.search" />
     </nav>
   </header>
 </template>
 
 <script>
-export default {};
+import PocketBase from "pocketbase";
+
+export default {
+  methods: {
+    signOut() {
+      const pb = new PocketBase(useRuntimeConfig().public.DATABASE_URL);
+      pb.authStore.clear();
+      navigateTo("/signin");
+    },
+  },
+};
 </script>
 
 <style module lang="scss">
@@ -56,6 +67,18 @@ export default {};
       background: url("~/assets/users.svg") no-repeat no-repeat center;
       background-size: 80%;
       transition: 0.25s;
+      &:hover {
+        background-color: rgb(175, 175, 175);
+      }
+    }
+    .signout {
+      width: 1.7em;
+      height: 1.7em;
+      background: url("~/assets/signout.svg") no-repeat no-repeat center;
+      background-size: 90%;
+      transition: 0.25s;
+      border: none;
+      cursor: pointer;
       &:hover {
         background-color: rgb(175, 175, 175);
       }

@@ -13,15 +13,24 @@
           <img :src="avatarUrl" alt="user avatar" :class="$style.avatar" />
         </NuxtLink>
       </div>
-      <div :class="$style['message-content']"></div>
+      <div :class="$style['message-content']">
+        <ClipLoader v-if="!messages" :class="$style.loader" />
+        <span v-else-if="!messages.length">No messages yet :)</span>
+      </div>
       <div :class="$style['input-wrapper']">
-        <form :class="$style['send-message-form']">
+        <form
+          @submit.prevent="sendMessage"
+          :class="$style['send-message-form']"
+        >
           <input
             placeholder="write a message"
             type="text"
             :class="$style['message-area']"
+            v-model="input"
           />
-          <button type="submit" :class="$style.send">Send</button>
+          <button :disabled="!input.length" type="submit" :class="$style.send">
+            Send
+          </button>
         </form>
       </div>
     </div>
@@ -30,25 +39,33 @@
 
 <script>
 import PocketBase from "pocketbase";
+import ClipLoader from "vue-spinner/src/ClipLoader.vue";
 
 export default {
+  components: { ClipLoader },
+  methods: {
+    sendMessage() {
+      if (input.length) {
+      }
+    },
+  },
   mounted() {
     this.$nextTick(() => {
       const pb = new PocketBase(useRuntimeConfig().public.DATABASE_URL);
       useHead({ title: "Loading..." });
       if (pb.authStore.model.id === this.$route.params.id) {
-        navigateTo("/messages");
+        navigateTo("/messages"); 
       }
       pb.collection("users")
         .getOne(this.$route.params.id)
         .then((response) => {
           this.user = response;
-          console.log(response);
           const url = `${
             useRuntimeConfig().public.DATABASE_URL
           }/api/files/users/${response.id}/${response.avatar}?thumb=80x80`;
           this.avatarUrl = url;
           useHead({ title: `${response.firstName} ${response.lastName}` });
+          pb.collection("messages").getFirstListItem(``);
         })
         .catch(() => navigateTo("/messages"));
     });
@@ -57,6 +74,8 @@ export default {
     return {
       user: null,
       avatarUrl: null,
+      input: "",
+      messages: null,
     };
   },
 };
@@ -131,6 +150,9 @@ export default {
       width: 100%;
       height: calc(100% - 6em);
       overflow-y: auto;
+      .loader {
+        margin-top: 5em;
+      }
     }
     .input-wrapper {
       width: 100%;
